@@ -1,6 +1,8 @@
 package com.example.testapp999;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
@@ -11,10 +13,19 @@ public class MainActivity extends AppCompatActivity implements JsonData.OnDataAv
 	private String page = "1";
 	private String feedLimit = "40";
 
+	private RecyclerView recyclerView;
+	private RecyclerViewAdapter recyclerViewAdapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		recyclerView = findViewById(R.id.act_main_recycler);
+		recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+
+		recyclerViewAdapter = new RecyclerViewAdapter(this);
+		recyclerView.setAdapter(recyclerViewAdapter);
 	}
 
 	@Override
@@ -26,6 +37,6 @@ public class MainActivity extends AppCompatActivity implements JsonData.OnDataAv
 
 	@Override
 	public void onDataAvailable(List<Ads> data, DownloadStatus status) {
-	int i = 0;
+		recyclerViewAdapter.loadNewData(data);
 	}
 }

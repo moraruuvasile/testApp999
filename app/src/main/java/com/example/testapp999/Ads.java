@@ -1,18 +1,19 @@
 package com.example.testapp999;
 
 public class Ads {
-	private String photo;
+	public static final String id160 = "https://i.simpalsmedia.com/999.md/BoardImages/160x120/";
+	private String photoRaw;
 	private String title;
 	private String price;
 
 	public Ads(String title, String price, String photo) {
 		this.title = title;
 		this.price = price;
-		this.photo = photo;
+		this.photoRaw = photo;
 	}
 
-	public String getPhoto() {
-		return photo;
+	public String getPhotoRaw() {
+		return photoRaw;
 	}
 
 	public String getTitle() {
@@ -24,7 +25,7 @@ public class Ads {
 	}
 
 	public void setPhoto(String photo) {
-		this.photo = photo;
+		this.photoRaw = photo;
 	}
 
 	public void setTitle(String title) {
