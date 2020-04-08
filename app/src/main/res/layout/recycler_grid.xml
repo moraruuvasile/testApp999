@@ -5,28 +5,31 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-
+    android:background="@drawable/selectorr"
     >
 
     <Button
-        android:id="@+id/btnSave"
+        android:id="@+id/recycle_btnSave"
         android:layout_width="144dp"
         android:layout_height="36dp"
-        android:text="Save" />
+        android:text="Save"
+        android:gravity="left" />
 
     <ImageView
-        android:id="@+id/recycle_grid_image"
+        android:id="@+id/recycle_image"
         android:layout_width="145dp"
-        android:layout_height="136dp" />
+        android:layout_height="136dp"
+        android:scaleType="fitCenter"
+        />
 
     <TextView
-        android:id="@+id/recycle_grid_price"
+        android:id="@+id/recycle_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView" />
 
     <TextView
-        android:id="@+id/recycle_grid_title"
+        android:id="@+id/recycle_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView" />
