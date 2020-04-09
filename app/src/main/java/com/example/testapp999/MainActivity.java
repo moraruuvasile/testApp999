@@ -13,7 +13,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements JsonData.OnDataAvailable, RecyclerViewAdapter.RecyclerViewClickInterface {
 	private String feedUrl = "https://999.md/api/v3/categories/real-estate/apartments-and-rooms?page=%d&lang=ru&page_size=%d";
 	private String page = "1";
-	private String feedLimit = "30";
+	private String feedLimit = "100";
 	private GridLayoutManager layoutManager;
 
 	private RecyclerView recyclerView;

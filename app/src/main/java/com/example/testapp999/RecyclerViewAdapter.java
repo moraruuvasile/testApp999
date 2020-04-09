@@ -46,18 +46,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter{
 		ViewHolderOne holder1 =  (ViewHolderOne)holder;
 		System.out.println(holder1.toString());
 		Ads ads = adsList.get(position);
-		if(position == 0) {
-			holder1.itemView.setVisibility(View.GONE);
-			holder1.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-		}else {
-			holder1.itemView.setVisibility(View.VISIBLE);
-			holder1.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//		if(position == 0) {
+//			holder1.itemView.setVisibility(View.GONE);
+//			holder1.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+//		}else {
+//			holder1.itemView.setVisibility(View.VISIBLE);
+//			holder1.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 			holder1.title.setText(ads.getTitle());
-			holder1.price.setText(ads.getPrice());
+			holder1.price.setText(String.valueOf(position));
 
 			Picasso.get().load(Ads.id160 + ads.getPhotoRaw())
 					.into(holder1.thumbnail);
-		}
+//		}
 
 	}
 
@@ -68,8 +68,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter{
 
 	@Override
 	public int getItemViewType(int position) {
-		return position%10==0 ? 1 : 0;
-//		return (position%10==0 && position != 0) ? 1 : 0;
+
+		return position % 10 == 9 ? 1 : 0;
 	}
 
 	void loadNewData(List<Ads> newAds) {
@@ -78,7 +78,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter{
 	}
 
 	class ViewHolderOne extends RecyclerView.ViewHolder {
-			ImageView thumbnail = null;
+			ImageView thumbnail;
 			TextView title, price;
 			Button button;
 
