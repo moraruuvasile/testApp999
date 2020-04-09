@@ -14,16 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter{
 
 	private List<Ads> adsList;
 	private LayoutInflater layoutInflater;
-	RecyclerViewClickInterface recyclerViewClickInterface;
+	private RecyclerViewClickInterface recyclerViewClickInterface;
+	private Boolean first99 = false, first199 = false, first299 = false;
 
 	interface RecyclerViewClickInterface{
 			void onItemShortClick(int position);
+			void loadNextPage();
 	}
 
 	public RecyclerViewAdapter(Context context) {
@@ -59,6 +62,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter{
 					.into(holder1.thumbnail);
 //		}
 
+		if(position == 99 && !first99 ){
+			first99 = true;
+			recyclerViewClickInterface.loadNextPage();}
+
+		if(position == 199 && !first199 ){
+			first199 = true;
+			recyclerViewClickInterface.loadNextPage();}
+
+		if(position == 299 && !first299 ){
+			first299 = true;
+			recyclerViewClickInterface.loadNextPage();}
 	}
 
 	@Override
@@ -68,13 +82,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter{
 
 	@Override
 	public int getItemViewType(int position) {
-
 		return position % 10 == 9 ? 1 : 0;
 	}
 
 	void loadNewData(List<Ads> newAds) {
-		adsList = newAds;
-		notifyDataSetChanged();
+			adsList = newAds;
+			notifyDataSetChanged();
 	}
 
 	class ViewHolderOne extends RecyclerView.ViewHolder {
@@ -82,17 +95,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter{
 			TextView title, price;
 			Button button;
 
-			public ViewHolderOne(View itemView) {
+			ViewHolderOne(View itemView) {
 				super(itemView);
+
 				this.thumbnail = itemView.findViewById(R.id.recycle_image);
 				this.price = itemView.findViewById(R.id.recycle_price);
 				this.title = itemView.findViewById(R.id.recycle_title);
 				this.button = itemView.findViewById(R.id.recycle_btnSave);
+
 				itemView.setOnClickListener((v)->
 						Toast.makeText(v.getContext(), "To be done with fragment", Toast.LENGTH_SHORT).show());
-				this.button.setOnClickListener((v)->
-						Toast.makeText(v.getContext(), "To be done with SQLite", Toast.LENGTH_SHORT).show());
-				recyclerViewClickInterface.onItemShortClick(getAdapterPosition());
+
+				this.button.setOnClickListener((v)->{
+						Toast.makeText(v.getContext(), "To be done with SQLite", Toast.LENGTH_SHORT).show();
+						recyclerViewClickInterface.onItemShortClick(getAdapterPosition());
+				});
 			}
 	}
 
