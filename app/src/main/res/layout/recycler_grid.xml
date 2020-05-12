@@ -13,7 +13,7 @@
         android:layout_width="144dp"
         android:layout_height="36dp"
         android:text="Save"
-        android:gravity="left" />
+        android:gravity="start" />
 
     <ImageView
         android:id="@+id/recycle_image"
