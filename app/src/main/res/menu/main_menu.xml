@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mnu_save"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="Save"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/mnu_bytitle"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:title="Sort by title" />
+    <item
+        android:id="@+id/mnu_byprice"
+        android:title="Sort by price" />
+    <group
+        android:id="@+id/mnugrpAZ"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/mnu_AZ"
+            android:checked="true"
+            android:title="Sort a..z" />
+        <item
+            android:id="@+id/mnu_ZA"
+            android:title="Sort z..a" />
+    </group>
+</menu>

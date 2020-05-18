@@ -1,6 +1,5 @@
 package com.example.testapp999.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +20,13 @@ import java.util.List;
 public class AdsRecyclerAdapter extends RecyclerView.Adapter {
 
     private List<Ads> adsList;
-	private OnItemClickListener listener;
+    private OnItemClickListener listener;
     private Boolean first99 = false, first199 = false, first299 = false;
 
+
+    public AdsRecyclerAdapter(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     @NonNull
     @Override
@@ -56,17 +59,17 @@ public class AdsRecyclerAdapter extends RecyclerView.Adapter {
 
         if (position == 99 && !first99) {
             first99 = true;
-			listener.loadNextPage();
+            listener.loadNextPage();
         }
 
         if (position == 199 && !first199) {
             first199 = true;
-			listener.loadNextPage();
+            listener.loadNextPage();
         }
 
         if (position == 299 && !first299) {
             first299 = true;
-			listener.loadNextPage();
+            listener.loadNextPage();
         }
     }
 
@@ -85,11 +88,20 @@ public class AdsRecyclerAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+    public interface OnItemClickListener {
+        void onAdClick(Ads ads);
 
-    class ViewHolderOne extends RecyclerView.ViewHolder {
+        void onSaveBtnClick(Ads ads);
+
+        void loadNextPage();
+    }
+
+  class ViewHolderOne extends RecyclerView.ViewHolder {
+        int i = 0; // logic to inform if Saved button was pressed more than 2 times
         ImageView thumbnail;
         TextView title, price;
         Button button;
+
 
         ViewHolderOne(View itemView) {
             super(itemView);
@@ -100,21 +112,15 @@ public class AdsRecyclerAdapter extends RecyclerView.Adapter {
             this.button = itemView.findViewById(R.id.recycle_btnSave);
 
             itemView.setOnClickListener((v) ->
-                    Toast.makeText(v.getContext(), "To be done with fragment", Toast.LENGTH_SHORT).show());
+                    listener.onAdClick(adsList.get(getAdapterPosition())));
 
             this.button.setOnClickListener((v) -> {
-                Toast.makeText(v.getContext(), "To be done with SQLite", Toast.LENGTH_SHORT).show();
-				listener.onItemShortClick(getAdapterPosition());
+                if (i++ > 0) {
+                    Toast.makeText(v.getContext(), "Was saved succeseful", Toast.LENGTH_SHORT).show();
+                }
+                listener.onSaveBtnClick(adsList.get(getAdapterPosition()));
             });
         }
     }
-
-	public interface OnItemClickListener {
-		void onItemShortClick(int position);
-		void loadNextPage();
-	}
-	public void setOnItemClickListener(OnItemClickListener listener) {
-		this.listener = listener;
-	}
 
 }
