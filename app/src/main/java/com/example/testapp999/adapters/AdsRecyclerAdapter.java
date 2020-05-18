@@ -54,6 +54,7 @@ public class AdsRecyclerAdapter extends RecyclerView.Adapter {
         holder1.price.setText(String.valueOf(position));
 
         Picasso.get().load(Ads.id160 + ads.getImage())
+                .placeholder(R.drawable.placeholder1)
                 .into(holder1.thumbnail);
 //		}
 

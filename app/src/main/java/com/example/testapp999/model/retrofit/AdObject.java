@@ -3,6 +3,7 @@ package com.example.testapp999.model.retrofit;
 import java.util.List;
 
 public class AdObject {
+    public static final String id900 = "https://i.simpalsmedia.com/999.md/BoardImages/900x900/";
 
     private Ad ad;
 
