@@ -17,8 +17,9 @@ import java.util.List;
 public class AdsViewModel extends AndroidViewModel {
     private final ApiRepo apiRepo;
     private final DbRepo dbRepo;
-    private MutableLiveData<List<Ads>> adsLiveData;
     private MutableLiveData<AdObject> adLiveData;
+    private Integer ascOrDesc;
+
 
 
     public AdsViewModel(@NonNull Application application) {
@@ -26,6 +27,7 @@ public class AdsViewModel extends AndroidViewModel {
 
         apiRepo = ApiRepo.getInstance();
         dbRepo = new DbRepo(application);
+
     }
 
     /// Comunication with API I
@@ -34,18 +36,32 @@ public class AdsViewModel extends AndroidViewModel {
     }
 
     /// Comunication with API II
-    public LiveData<AdObject> getListAd(int id) {
-        return apiRepo.getAd(id);
+    public void initAd(int id){
+        adLiveData = apiRepo.getAd(id);
     }
-
+    public LiveData<AdObject> getListAd() {
+        return adLiveData;
+    }
 
     /// Comunication with DB
     public void insert(Ads ads) {
         dbRepo.insert(ads);
     }
-
     public LiveData<List<Ads>> getAllAdsFromDB() {
         return dbRepo.getAllNotes();
     }
+
+    ///MainActivity menu variable ifAZorZA
+    public Integer getAscOrDesc(){
+        if (ascOrDesc == null) {
+            ascOrDesc = 10;
+        }
+        return ascOrDesc;
+    }
+
+    public void inverseAscOrDesc(){
+        ascOrDesc = 35 - ascOrDesc;
+    }
+
 }
 

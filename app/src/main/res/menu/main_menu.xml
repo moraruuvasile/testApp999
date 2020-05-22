@@ -19,10 +19,9 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/mnu_AZ"
-            android:checked="true"
-            android:title="Sort a..z" />
+            android:title="Sort ascending" />
         <item
             android:id="@+id/mnu_ZA"
-            android:title="Sort z..a" />
+            android:title="Sort descending" />
     </group>
 </menu>

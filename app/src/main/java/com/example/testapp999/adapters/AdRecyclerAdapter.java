@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.testapp999.R;
 import com.example.testapp999.model.retrofit.AdObject;
@@ -35,7 +36,6 @@ public class AdRecyclerAdapter extends RecyclerView.Adapter<AdRecyclerAdapter.Ad
         Picasso.get().load(AdObject.id900 + photoList.get(position))
                 .placeholder(R.drawable.placeholder1)
                 .into(holder.imageView);
-        holder.textView.setText("vasea");
     }
 
     @Override
@@ -45,12 +45,10 @@ public class AdRecyclerAdapter extends RecyclerView.Adapter<AdRecyclerAdapter.Ad
 
     class AdRecyclerViewHolder extends RecyclerView.ViewHolder
     {
-        private TextView textView;
         private ImageView imageView;
 
         public AdRecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.ad_previuw_textView);
             imageView = itemView.findViewById(R.id.ad_previuw_imageView);
         }
     }

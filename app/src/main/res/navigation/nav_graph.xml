@@ -8,8 +8,11 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.testapp999.fragments.MainFragment"
-        android:label="fragment_main"
+        android:label="Apartments"
         tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_savedAdsFragment"
+            app:destination="@id/savedAdsFragment" />
         <action
             android:id="@+id/action_mainFragment_to_adPreviewFragment"
             app:destination="@id/adPreviewFragment" />
@@ -17,20 +20,19 @@
     <fragment
         android:id="@+id/adPreviewFragment"
         android:name="com.example.testapp999.fragments.AdPreviewFragment"
-        android:label="fragment_ad_preview"
+        android:label="Details"
         tools:layout="@layout/fragment_ad_preview" >
         <argument
             android:name="ads"
             app:argType="com.example.testapp999.model.retrofit.Ads" />
-        <argument
-            android:name="qsq"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/savedAdsFragment"
         android:name="com.example.testapp999.fragments.SavedAdsFragment"
-        android:label="fragment_saved_ads"
-        tools:layout="@layout/fragment_saved_ads" />
+        android:label="Savd Ads"
+        tools:layout="@layout/fragment_saved_ads" >
+        <action
+            android:id="@+id/action_savedAdsFragment_to_adPreviewFragment"
+            app:destination="@id/adPreviewFragment" />
+    </fragment>
 </navigation>

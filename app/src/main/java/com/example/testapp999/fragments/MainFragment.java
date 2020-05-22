@@ -1,19 +1,23 @@
 package com.example.testapp999.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.testapp999.R;
 import com.example.testapp999.adapters.AdsRecyclerAdapter;
+import com.example.testapp999.model.retrofit.AdObject;
 import com.example.testapp999.model.retrofit.Ads;
 import com.example.testapp999.viewmodel.AdsViewModel;
 
@@ -22,12 +26,38 @@ import java.util.List;
 
 
 public class MainFragment extends Fragment {
+    private static final String TAG = "MainFragment";
     AdsViewModel adsViewModel;
     private List<Ads> adsList;
     private GridLayoutManager layoutManager;
     private RecyclerView recyclerView;
     private AdsRecyclerAdapter recyclerViewAdapter;
     private int pageNr = 1;
+
+    private AdsRecyclerAdapter.OnItemClickListener adClickCallBack = new AdsRecyclerAdapter.OnItemClickListener() {
+        @Override
+        public void onAdClick(Ads ads) {
+
+//            adsViewModel.initAd(Integer.parseInt(ads.get_id()));
+//            adsViewModel.getListAd().observe(getViewLifecycleOwner(), (AdObject adObject) -> {
+//                Log.d(TAG, "onAdClick: " + adObject.getAd().getExtended_images().size());
+//            });
+            Navigation.findNavController(requireView())
+                    .navigate(MainFragmentDirections.actionMainFragmentToAdPreviewFragment(ads));
+
+        }
+
+        @Override
+        public void onSaveBtnClick(Ads ads) {
+            adsViewModel.insert(ads);
+        }
+
+        @Override
+        public void loadNextPage() {
+            pageNr++;
+            adsViewModel.getListAds(pageNr, "ru", 100);
+        }
+    };
 
     public MainFragment() {
         // Required empty public constructor
@@ -36,6 +66,8 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         recyclerView = view.findViewById(R.id.act_main_recycler);
 
@@ -47,8 +79,8 @@ public class MainFragment extends Fragment {
         return view;
     }
 
-    public void onDataAvailable(List<Ads> data) {
-        List<Ads> temp = new ArrayList<>();;
+    private void onDataAvailable(List<Ads> data) {
+        List<Ads> temp = new ArrayList<>();
         int x = 0;
 
         if (adsList == null)
@@ -63,7 +95,6 @@ public class MainFragment extends Fragment {
         }
         recyclerViewAdapter.loadNewData(adsList);
     }
-
 
     private void setUpRecyclerView() {
         if (recyclerViewAdapter == null) {
@@ -85,36 +116,18 @@ public class MainFragment extends Fragment {
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(recyclerViewAdapter);
 
-       } else {
+        } else {
             recyclerViewAdapter.notifyDataSetChanged();
-       }
+        }
 
     }
-
-    private AdsRecyclerAdapter.OnItemClickListener adClickCallBack = new AdsRecyclerAdapter.OnItemClickListener() {
-        @Override
-        public void onAdClick(Ads ads) {
-            Navigation.findNavController(requireView())
-                    .navigate(MainFragmentDirections.actionMainFragmentToAdPreviewFragment(ads));
-        }
-
-        @Override
-        public void onSaveBtnClick(Ads ads) {
-            adsViewModel.insert(ads);
-        }
-
-        @Override
-        public void loadNextPage() {
-            pageNr++;
-            adsViewModel.getListAds(pageNr, "ru", 100);
-        }
-    };
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        recyclerViewAdapter =null;
+        recyclerViewAdapter = null;
     }
 
 
 }
+

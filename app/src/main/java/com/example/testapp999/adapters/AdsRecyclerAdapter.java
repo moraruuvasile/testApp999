@@ -24,7 +24,7 @@ public class AdsRecyclerAdapter extends RecyclerView.Adapter {
     private Boolean first99 = false, first199 = false, first299 = false;
 
 
-    public AdsRecyclerAdapter(OnItemClickListener listener) {
+    public  AdsRecyclerAdapter(OnItemClickListener listener) {
         this.listener = listener;
     }
 
@@ -42,7 +42,6 @@ public class AdsRecyclerAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolderOne holder1 = (ViewHolderOne) holder;
-        System.out.println(holder1.toString());
         Ads ads = adsList.get(position);
 //		if(position == 0) {
 //			holder1.itemView.setVisibility(View.GONE);

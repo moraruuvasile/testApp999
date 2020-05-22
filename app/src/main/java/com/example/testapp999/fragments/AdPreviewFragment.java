@@ -4,13 +4,22 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.testapp999.R;
 import com.example.testapp999.adapters.AdRecyclerAdapter;
@@ -18,17 +27,25 @@ import com.example.testapp999.model.retrofit.AdObject;
 import com.example.testapp999.model.retrofit.Ads;
 import com.example.testapp999.viewmodel.AdsViewModel;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class AdPreviewFragment extends Fragment {
+    private static final String TAG = "AdPreviewFragment";
+    private static int FIRST_RUN = 0;
+    private int observerCall = 0;
     private Ads ads;
     private AdsViewModel adsViewModel;
-    private List<String> photoList;
     private AdRecyclerAdapter adRecyclerAdapter;
     private ViewPager2 adViewPager;
-    private int i = 0;
+    private LinearLayout layoutOnboardingIndicators;
+    private TextView pageNr;
+    private TextView title;
+    private TextView price;
+
 
     public AdPreviewFragment() {
         // Required empty public constructor
@@ -38,13 +55,13 @@ public class AdPreviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        requireActivity().setTitle("Preview");
+        setHasOptionsMenu(true);
 
         AdPreviewFragmentArgs args = AdPreviewFragmentArgs.fromBundle(requireArguments());
         ads = args.getAds();
 
-        adsViewModel = new ViewModelProvider(requireActivity()).get(AdsViewModel.class);
-        photoList = new ArrayList<>();
+        adsViewModel = new ViewModelProvider(this).get(AdsViewModel.class);
+        adsViewModel.initAd(Integer.parseInt(ads.get_id()));
 
         return inflater.inflate(R.layout.fragment_ad_preview, container, false);
     }
@@ -54,35 +71,82 @@ public class AdPreviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         adViewPager = view.findViewById(R.id.adViewPager2);
+        layoutOnboardingIndicators = view.findViewById(R.id.layoutOfIndicator);
+        pageNr = view.findViewById(R.id.ad_preview_page_nr);
+        title = view.findViewById(R.id.ad_preview_title);
+        price = view.findViewById(R.id.ad_preview_price);
 
-        adsViewModel.getListAd(Integer.parseInt(ads.get_id()))
-                .observe(getViewLifecycleOwner(), (AdObject adObject) -> {
+        title.setText(ads.getTitle());
+        price.setText(String.valueOf(ads.getPrice()) + ads.getCurrency());
 
-                    photoList.clear();
-                    for (AdObject.ObjPhoto photo : adObject.getAd().getExtended_images()) {
-                        photoList.add(photo.getFilename());
-                        setUpRecyclerView(photoList);
-                    }
+        adsViewModel.getListAd().observe(getViewLifecycleOwner(), (AdObject adObject) -> {
+            FIRST_RUN++;
+            observerCall++;
+            Log.d(TAG, "onViewCreated: viewmodel - this " + adObject.getAd().getExtended_images().size());
+            if (FIRST_RUN == 1 || observerCall > 1) {
+                List<String> photoList = new ArrayList<>();
 
-                });
+                for (AdObject.ObjPhoto photo : adObject.getAd().getExtended_images()) {
+                    photoList.add(photo.getFilename());
+                }
 
+                adRecyclerAdapter = new AdRecyclerAdapter(photoList);
+                adViewPager.setAdapter(adRecyclerAdapter);
+
+                setupOnboardingIndicators();
+                setCurrentOnboardIndicator(0);
+            }
+        });
+
+
+        adViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                setCurrentOnboardIndicator(position);
+                pageNr.setText(String.valueOf(position + 1));
+            }
+        });
 
     }
 
-    private void setUpRecyclerView(List<String> photoList) {
-        if (adRecyclerAdapter == null) {
-            adRecyclerAdapter = new AdRecyclerAdapter(photoList);
-            adViewPager.setAdapter(adRecyclerAdapter);
-        } else {
-            adRecyclerAdapter.notifyDataSetChanged();
+
+    private void setupOnboardingIndicators() {
+        ImageView[] indicators = new ImageView[adRecyclerAdapter.getItemCount()];
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(7, 0, 7, 0);
+        for (int i = 0; i < indicators.length; i++) {
+            indicators[i] = new ImageView(requireContext());
+            indicators[i].setImageDrawable(
+                    ContextCompat.getDrawable(requireContext(), R.drawable.indicator_inactive)
+            );
+            indicators[i].setLayoutParams(layoutParams);
+            layoutOnboardingIndicators.addView(indicators[i]);
+        }
+    }
+
+    private void setCurrentOnboardIndicator(int index) {
+        int childCount = layoutOnboardingIndicators.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            ImageView imageView = (ImageView) layoutOnboardingIndicators.getChildAt(i);
+            if (i == index) {
+                imageView.setImageDrawable(
+                        ContextCompat.getDrawable(requireContext(), R.drawable.indicator_active)
+                );
+            } else {
+                imageView.setImageDrawable(
+                        ContextCompat.getDrawable(requireContext(), R.drawable.indicator_inactive)
+                );
+            }
         }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        getActivity().setTitle(getResources().getString(R.string.app_name));
-
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
     }
 }
+
