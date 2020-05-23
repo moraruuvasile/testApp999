@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -16,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,8 +24,6 @@ import com.example.testapp999.adapters.AdRecyclerAdapter;
 import com.example.testapp999.model.retrofit.AdObject;
 import com.example.testapp999.model.retrofit.Ads;
 import com.example.testapp999.viewmodel.AdsViewModel;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +104,11 @@ public class AdPreviewFragment extends Fragment {
                 setCurrentOnboardIndicator(position);
                 pageNr.setText(String.valueOf(position + 1));
             }
+        });
+
+        title.setOnClickListener((v)->{
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_adPreviewFragment_to_adZoom);
         });
 
     }

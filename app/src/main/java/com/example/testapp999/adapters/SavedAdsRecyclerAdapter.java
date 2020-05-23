@@ -55,7 +55,7 @@ public class SavedAdsRecyclerAdapter extends RecyclerView.Adapter<SavedAdsRecycl
         void onAdClick(Ads ads);
     }
 
-    class SavedAdsRecyclerViewHolder extends RecyclerView.ViewHolder
+   class SavedAdsRecyclerViewHolder extends RecyclerView.ViewHolder
     {
         ImageView thumbnail;
         TextView title, price;

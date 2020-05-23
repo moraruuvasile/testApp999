@@ -1,28 +1,28 @@
 package com.example.testapp999;
 
-import android.app.Activity;
-import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import androidx.activity.OnBackPressedCallback;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
+
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.testapp999.adapters.AdsRecyclerAdapter;
-import com.example.testapp999.fragments.MainFragmentDirections;
+import com.example.testapp999.fragments.MainFragment;
 import com.example.testapp999.model.retrofit.Ads;
 import com.example.testapp999.viewmodel.AdsViewModel;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     AdsViewModel viewModel;
@@ -58,6 +58,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+            case R.id.mnu_bytitle:
+                sortAdsByTitle();
+                break;
+
+            case R.id.mnu_byprice:
+                sortAdsByPrice();
+                break;
+
             case R.id.mnu_save:
                 navController.navigate(R.id.action_mainFragment_to_savedAdsFragment);
                 break;
@@ -77,4 +85,55 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    private void sortAdsByPrice() {
+        List<Ads> adsList = new ArrayList<>();
+        MainFragment mainFragment = (MainFragment) getFunctionalFragment();
+        adsList = mainFragment.getAdsList();
+
+        if(viewModel.getAscOrDesc() == 10){
+            Ads.PriceCompare nameCompare = new Ads().new PriceCompare();
+            Collections.sort(adsList, nameCompare);
+        } else {
+            Ads.ReversPriceCompare nameCompare = new Ads().new ReversPriceCompare();
+            Collections.sort(adsList, nameCompare);
+        }
+        mainFragment.setAdsList(adsList);
+
+    }
+
+    private void sortAdsByTitle() {
+        List<Ads> adsList = new ArrayList<>();
+//        MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment).getChildFragmentManager().getFragments().get(0);
+
+        MainFragment mainFragment = (MainFragment) getFunctionalFragment();
+        adsList = mainFragment.getAdsList();
+
+        if(viewModel.getAscOrDesc() == 10){
+            Ads.NameCompare nameCompare = new Ads().new NameCompare();
+            Collections.sort(adsList, nameCompare);
+        } else {
+            Ads.ReversNameCompare nameCompare = new Ads().new ReversNameCompare();
+            Collections.sort(adsList, nameCompare);
+        }
+        mainFragment.setAdsList(adsList);
+    }
+
+    public Fragment getFunctionalFragment ()
+    {
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        FragmentManager navHostManager = Objects.requireNonNull(navHostFragment).getChildFragmentManager();
+
+        Fragment fragment=null;
+        List fragment_list = navHostManager.getFragments();
+
+        for (int i=0; i < fragment_list.size() ; i ++ )
+        {
+            if ( fragment_list.get(i) instanceof MainFragment) {
+                fragment = (MainFragment) fragment_list.get(i);
+                break;
+            }
+        }
+
+        return fragment;
+    }
 }

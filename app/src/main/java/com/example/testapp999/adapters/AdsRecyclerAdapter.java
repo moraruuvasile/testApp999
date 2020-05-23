@@ -50,7 +50,7 @@ public class AdsRecyclerAdapter extends RecyclerView.Adapter {
 //			holder1.itemView.setVisibility(View.VISIBLE);
 //			holder1.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         holder1.title.setText(ads.getTitle());
-        holder1.price.setText(String.valueOf(position));
+        holder1.price.setText(String.valueOf(ads.getPrice()));
 
         Picasso.get().load(Ads.id160 + ads.getImage())
                 .placeholder(R.drawable.placeholder1)

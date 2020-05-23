@@ -34,6 +34,8 @@ public class AdRecyclerAdapter extends RecyclerView.Adapter<AdRecyclerAdapter.Ad
     @Override
     public void onBindViewHolder(@NonNull AdRecyclerViewHolder holder, int position) {
         Picasso.get().load(AdObject.id900 + photoList.get(position))
+//         .fit()
+//         .centerInside()
                 .placeholder(R.drawable.placeholder1)
                 .into(holder.imageView);
     }
@@ -43,8 +45,7 @@ public class AdRecyclerAdapter extends RecyclerView.Adapter<AdRecyclerAdapter.Ad
         return photoList.size();
     }
 
-    class AdRecyclerViewHolder extends RecyclerView.ViewHolder
-    {
+    class AdRecyclerViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
 
         public AdRecyclerViewHolder(@NonNull View itemView) {
@@ -52,8 +53,6 @@ public class AdRecyclerAdapter extends RecyclerView.Adapter<AdRecyclerAdapter.Ad
             imageView = itemView.findViewById(R.id.ad_previuw_imageView);
         }
     }
-
-
 
 
 }

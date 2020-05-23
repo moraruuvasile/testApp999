@@ -21,10 +21,13 @@
         android:id="@+id/adPreviewFragment"
         android:name="com.example.testapp999.fragments.AdPreviewFragment"
         android:label="Details"
-        tools:layout="@layout/fragment_ad_preview" >
+        tools:layout="@layout/fragment_ad_preview2" >
         <argument
             android:name="ads"
             app:argType="com.example.testapp999.model.retrofit.Ads" />
+        <action
+            android:id="@+id/action_adPreviewFragment_to_adZoom"
+            app:destination="@id/adZoom" />
     </fragment>
     <fragment
         android:id="@+id/savedAdsFragment"
@@ -35,4 +38,9 @@
             android:id="@+id/action_savedAdsFragment_to_adPreviewFragment"
             app:destination="@id/adPreviewFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/adZoom"
+        android:name="com.example.testapp999.fragments.AdZoom"
+        android:label="fragment_ad_zoom"
+        tools:layout="@layout/fragment_ad_zoom" />
 </navigation>

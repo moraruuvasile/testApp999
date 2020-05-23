@@ -19,7 +19,7 @@
         android:id="@+id/recycle_image"
         android:layout_width="145dp"
         android:layout_height="136dp"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         />
 
     <TextView

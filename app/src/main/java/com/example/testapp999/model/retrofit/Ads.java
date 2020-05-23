@@ -1,11 +1,14 @@
 package com.example.testapp999.model.retrofit;
 
+import android.graphics.Movie;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 @Entity(tableName = "Ads_table")
 public class Ads implements Serializable {
@@ -22,10 +25,9 @@ public class Ads implements Serializable {
 
     private String image;
 
-    public Ads(String image) {
-        this.image = image;
-    }
-
+//    public Ads(String image) {
+//        this.image = image;
+//    }
 
 
     public float getPrice() {
@@ -87,7 +89,56 @@ public class Ads implements Serializable {
             return ads;
         }
     }
+
+    public class NameCompare implements Comparator<Ads>
+    {
+
+        public int compare(Ads m1, Ads m2)
+        {
+            return m1.getTitle().compareTo(m2.getTitle());
+        }
+    }
+
+    public class ReversNameCompare implements Comparator<Ads>
+    {
+
+        public int compare(Ads m1, Ads m2)
+        {
+            return m2.getTitle().compareTo(m1.getTitle());
+        }
+    }
+
+    public class PriceCompare implements Comparator<Ads>
+    {
+
+        public int compare(Ads m1, Ads m2)
+        {
+            if (m1.getPrice() < m2.getPrice()) return -1;
+            if (m1.getPrice() > m2.getPrice()) return 1;
+            else return 0;
+        }
+    }
+
+
+    public class ReversPriceCompare implements Comparator<Ads>
+    {
+
+        public int compare(Ads m1, Ads m2)
+        {
+            if (m1.getPrice() < m2.getPrice()) return 1;
+            if (m1.getPrice() > m2.getPrice()) return -1;
+            else return 0;
+        }
+    }
+
 }
+
+
+
+
+
+
+
 
 
 

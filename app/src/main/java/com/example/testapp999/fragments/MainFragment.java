@@ -33,7 +33,6 @@ public class MainFragment extends Fragment {
     private RecyclerView recyclerView;
     private AdsRecyclerAdapter recyclerViewAdapter;
     private int pageNr = 1;
-
     private AdsRecyclerAdapter.OnItemClickListener adClickCallBack = new AdsRecyclerAdapter.OnItemClickListener() {
         @Override
         public void onAdClick(Ads ads) {
@@ -58,9 +57,17 @@ public class MainFragment extends Fragment {
             adsViewModel.getListAds(pageNr, "ru", 100);
         }
     };
-
     public MainFragment() {
         // Required empty public constructor
+    }
+
+    public List<Ads> getAdsList() {
+        return adsList;
+    }
+
+    public void setAdsList(List<Ads> adsList) {
+        this.adsList = adsList;
+        recyclerViewAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -115,6 +122,7 @@ public class MainFragment extends Fragment {
 
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(recyclerViewAdapter);
+
 
         } else {
             recyclerViewAdapter.notifyDataSetChanged();
