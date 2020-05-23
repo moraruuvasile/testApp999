@@ -11,6 +11,7 @@ import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -80,7 +81,6 @@ public class AdPreviewFragment extends Fragment {
         adsViewModel.getListAd().observe(getViewLifecycleOwner(), (AdObject adObject) -> {
             FIRST_RUN++;
             observerCall++;
-            Log.d(TAG, "onViewCreated: viewmodel - this " + adObject.getAd().getExtended_images().size());
             if (FIRST_RUN == 1 || observerCall > 1) {
                 List<String> photoList = new ArrayList<>();
 
@@ -91,8 +91,15 @@ public class AdPreviewFragment extends Fragment {
                 adRecyclerAdapter = new AdRecyclerAdapter(photoList);
                 adViewPager.setAdapter(adRecyclerAdapter);
 
-                setupOnboardingIndicators();
-                setCurrentOnboardIndicator(0);
+                Log.d(TAG, "onViewCreated: " + observerCall);
+                if (observerCall==1 || observerCall%2 == 0) {
+                    setupOnboardingIndicators();
+                }
+                if (observerCall < 3) {
+                    setCurrentOnboardIndicator(0);
+                }
+
+                adViewPager.setCurrentItem(adsViewModel.getViewPagerPosition()-1);
             }
         });
 
@@ -105,12 +112,6 @@ public class AdPreviewFragment extends Fragment {
                 pageNr.setText(String.valueOf(position + 1));
             }
         });
-
-        title.setOnClickListener((v)->{
-            Navigation.findNavController(requireView())
-                    .navigate(R.id.action_adPreviewFragment_to_adZoom);
-        });
-
     }
 
 
@@ -119,6 +120,7 @@ public class AdPreviewFragment extends Fragment {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(7, 0, 7, 0);
+        layoutParams.gravity = Gravity.CENTER;
         for (int i = 0; i < indicators.length; i++) {
             indicators[i] = new ImageView(requireContext());
             indicators[i].setImageDrawable(
@@ -148,6 +150,18 @@ public class AdPreviewFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        adsViewModel.setViewPagerPosition(0);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        adsViewModel.setViewPagerPosition(adViewPager.getCurrentItem()+1);
     }
 }
 

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fragment_ad_zoom_view_dimen">40dp</dimen>
+</resources>

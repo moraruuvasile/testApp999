@@ -19,6 +19,8 @@ public class AdsViewModel extends AndroidViewModel {
     private final DbRepo dbRepo;
     private MutableLiveData<AdObject> adLiveData;
     private Integer ascOrDesc;
+    private Integer viewPagerPosition;
+
 
 
 
@@ -51,16 +53,26 @@ public class AdsViewModel extends AndroidViewModel {
         return dbRepo.getAllNotes();
     }
 
-    ///MainActivity menu variable ifAZorZA
+    ///MainActivity menu variable ifAscendingOrDescending
     public Integer getAscOrDesc(){
         if (ascOrDesc == null) {
             ascOrDesc = 10;
         }
         return ascOrDesc;
     }
-
     public void inverseAscOrDesc(){
         ascOrDesc = 35 - ascOrDesc;
+    }
+
+    ///AdPreviewFragment viewpager set position after screen rotate
+    public Integer getViewPagerPosition(){
+        if (viewPagerPosition == null) {
+            viewPagerPosition = 0;
+        }
+        return viewPagerPosition;
+    }
+    public void setViewPagerPosition(int viewPagerPosition){
+        this.viewPagerPosition = viewPagerPosition;
     }
 
 }

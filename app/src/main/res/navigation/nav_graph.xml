@@ -27,7 +27,7 @@
             app:argType="com.example.testapp999.model.retrofit.Ads" />
         <action
             android:id="@+id/action_adPreviewFragment_to_adZoom"
-            app:destination="@id/adZoom" />
+            app:destination="@id/adZoomFragment" />
     </fragment>
     <fragment
         android:id="@+id/savedAdsFragment"
@@ -39,8 +39,12 @@
             app:destination="@id/adPreviewFragment" />
     </fragment>
     <fragment
-        android:id="@+id/adZoom"
-        android:name="com.example.testapp999.fragments.AdZoom"
-        android:label="fragment_ad_zoom"
-        tools:layout="@layout/fragment_ad_zoom" />
+        android:id="@+id/adZoomFragment"
+        android:name="com.example.testapp999.fragments.AdZoomFragment"
+        android:label="Zoom"
+        tools:layout="@layout/fragment_ad_zoom" >
+        <argument
+            android:name="uri"
+            app:argType="string" />
+    </fragment>
 </navigation>

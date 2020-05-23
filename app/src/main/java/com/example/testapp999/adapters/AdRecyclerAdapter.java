@@ -7,10 +7,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.testapp999.R;
+import com.example.testapp999.fragments.AdPreviewFragmentDirections;
+import com.example.testapp999.fragments.SavedAdsFragmentDirections;
 import com.example.testapp999.model.retrofit.AdObject;
 import com.example.testapp999.model.retrofit.Ads;
 import com.squareup.picasso.Picasso;
@@ -51,6 +54,11 @@ public class AdRecyclerAdapter extends RecyclerView.Adapter<AdRecyclerAdapter.Ad
         public AdRecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.ad_previuw_imageView);
+
+            imageView.setOnClickListener((v) -> {
+                Navigation.findNavController(v)
+                        .navigate(AdPreviewFragmentDirections.actionAdPreviewFragmentToAdZoom(photoList.get(getAdapterPosition())));
+            });
         }
     }
 
