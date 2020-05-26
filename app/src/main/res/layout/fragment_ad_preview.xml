@@ -19,7 +19,8 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/adViewPager2"
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
+            android:layout_height="250dp"
+            android:focusableInTouchMode="true"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,7 +35,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:layout_weight="80"
                 android:orientation="horizontal"/>
 
@@ -53,9 +53,21 @@
             android:id="@+id/ad_preview_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:text="No photo"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+
+        <com.simpals.map.md.MapMdView
+            xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            mapbox:mapbox_cameraTargetLat="47.021"
+            mapbox:mapbox_cameraTargetLng="28.843"
+            mapbox:mapbox_cameraZoom="11"
+            mapbox:mapbox_cameraZoomMax="21"
+            mapbox:mapbox_cameraZoomMin="6" />
 
 
     </LinearLayout>

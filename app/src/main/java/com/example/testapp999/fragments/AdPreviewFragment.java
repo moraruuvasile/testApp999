@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
@@ -25,13 +24,24 @@ import com.example.testapp999.adapters.AdRecyclerAdapter;
 import com.example.testapp999.model.retrofit.AdObject;
 import com.example.testapp999.model.retrofit.Ads;
 import com.example.testapp999.viewmodel.AdsViewModel;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
+import com.mapbox.mapboxsdk.utils.BitmapUtils;
+import com.simpals.map.md.MapMd;
+import com.simpals.map.md.MapMdView;
+import com.simpals.map.md.listener.OnMapMdReadyCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class AdPreviewFragment extends Fragment {
+public class AdPreviewFragment extends Fragment implements OnMapMdReadyCallback {
     private static final String TAG = "AdPreviewFragment";
+    private static final String ID_ICON_APARTMENT = "apartment";
     private static int FIRST_RUN = 0;
     private int observerCall = 0;
     private Ads ads;
@@ -42,6 +52,10 @@ public class AdPreviewFragment extends Fragment {
     private TextView pageNr;
     private TextView title;
     private TextView price;
+    private MapMdView mapView;
+    private MapMd mapMd;
+    private SymbolManager symbolManager;
+    private AdObject.Value coordValues;
 
 
     public AdPreviewFragment() {
@@ -53,6 +67,7 @@ public class AdPreviewFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
+        MapMd.getInstanceMap(requireContext(), "99b67d4e-d0f8-4dda-afa4-7e909e4d5e49");
 
         AdPreviewFragmentArgs args = AdPreviewFragmentArgs.fromBundle(requireArguments());
         ads = args.getAds();
@@ -74,6 +89,9 @@ public class AdPreviewFragment extends Fragment {
         pageNr = view.findViewById(R.id.ad_preview_page_nr);
         title = view.findViewById(R.id.ad_preview_title);
         price = view.findViewById(R.id.ad_preview_price);
+        mapView = view.findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+
 
         title.setText(ads.getTitle());
         price.setText(String.valueOf(ads.getPrice()) + ads.getCurrency());
@@ -87,19 +105,23 @@ public class AdPreviewFragment extends Fragment {
                 for (AdObject.ObjPhoto photo : adObject.getAd().getExtended_images()) {
                     photoList.add(photo.getFilename());
                 }
-
+                if (adObject.getAd().getLocation_coordinates() != null) {
+                    coordValues = adObject.getAd().getLocation_coordinates().getValue();
+                }
                 adRecyclerAdapter = new AdRecyclerAdapter(photoList);
                 adViewPager.setAdapter(adRecyclerAdapter);
 
                 Log.d(TAG, "onViewCreated: " + observerCall);
-                if (observerCall==1 || observerCall%2 == 0) {
+                if (observerCall == 1 || observerCall % 2 == 0) {
                     setupOnboardingIndicators();
                 }
                 if (observerCall < 3) {
                     setCurrentOnboardIndicator(0);
                 }
 
-                adViewPager.setCurrentItem(adsViewModel.getViewPagerPosition()-1);
+                adViewPager.setCurrentItem(adsViewModel.getViewPagerPosition() - 1, false);
+
+                mapView.initMap(requireContext(), this);
             }
         });
 
@@ -112,6 +134,10 @@ public class AdPreviewFragment extends Fragment {
                 pageNr.setText(String.valueOf(position + 1));
             }
         });
+
+
+        //
+
     }
 
 
@@ -161,7 +187,81 @@ public class AdPreviewFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        adsViewModel.setViewPagerPosition(adViewPager.getCurrentItem()+1);
+        adsViewModel.setViewPagerPosition(adViewPager.getCurrentItem() + 1);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onMapReady(@NonNull MapboxMap mapMd) {
+        mapView.setLogoTopLeft();
+
+        mapMd.getStyle(style -> {
+
+            addApartmentImageToStyle(style);
+
+            if (coordValues != null) {
+                if (symbolManager == null) {
+                    symbolManager = new SymbolManager(mapView, mapMd, style);
+                }
+
+
+                Symbol symbol = symbolManager.create(new SymbolOptions()
+                        .withLatLng(new LatLng(coordValues.getLat(), coordValues.getLon()))
+                        .withIconImage(ID_ICON_APARTMENT)
+                        .withIconSize(1.5f));
+            }
+
+        });
+
+    }
+
+
+    private void addApartmentImageToStyle(Style style) {
+        style.addImage(ID_ICON_APARTMENT,
+                BitmapUtils.getBitmapFromDrawable(getResources().getDrawable(R.drawable.ic_location_24dp)),
+                true);
+    }
+
 }
 
