@@ -2,6 +2,7 @@ package com.example.testapp999.repository;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.testapp999.model.retrofit.AdObject;
@@ -56,6 +57,7 @@ public class ApiRepo {
 
     public MutableLiveData<AdObject> getAd(int id) {
         Call<AdObject> call = apiInterface.getAdById(id);
+
         call.enqueue(new Callback<AdObject>() {
             @Override
             public void onResponse(Call<AdObject> call, Response<AdObject> response) {
@@ -70,6 +72,7 @@ public class ApiRepo {
                 Log.d(TAG, "onFailure: from getAd" + t);
             }
         });
+
         return liveDataAdObject;
     }
 }

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
 import com.example.testapp999.model.retrofit.AdObject;
 import com.example.testapp999.model.retrofit.Ads;
@@ -17,11 +18,10 @@ import java.util.List;
 public class AdsViewModel extends AndroidViewModel {
     private final ApiRepo apiRepo;
     private final DbRepo dbRepo;
-    private MutableLiveData<AdObject> adLiveData;
-    private Integer ascOrDesc;
+    //old    private MutableLiveData<AdObject> adLiveData;
+    private final MutableLiveData<Integer> adIdLiveData = new MutableLiveData();
     private Integer viewPagerPosition;
-
-
+    private Integer ascOrDesc;
 
 
     public AdsViewModel(@NonNull Application application) {
@@ -38,40 +38,54 @@ public class AdsViewModel extends AndroidViewModel {
     }
 
     /// Comunication with API II
+
+    public final LiveData<AdObject> getListAd() {
+        return Transformations.switchMap(adIdLiveData, apiRepo::getAd);
+    }
+
+    public void initAd(int ids) {
+        adIdLiveData.setValue(ids);
+    }
+
+
+/* old
     public void initAd(int id){
         adLiveData = apiRepo.getAd(id);
     }
     public LiveData<AdObject> getListAd() {
         return adLiveData;
-    }
+    }*/
 
     /// Comunication with DB
     public void insert(Ads ads) {
         dbRepo.insert(ads);
     }
+
     public LiveData<List<Ads>> getAllAdsFromDB() {
         return dbRepo.getAllNotes();
     }
 
     ///MainActivity menu variable ifAscendingOrDescending
-    public Integer getAscOrDesc(){
+    public Integer getAscOrDesc() {
         if (ascOrDesc == null) {
             ascOrDesc = 10;
         }
         return ascOrDesc;
     }
-    public void inverseAscOrDesc(){
+
+    public void inverseAscOrDesc() {
         ascOrDesc = 35 - ascOrDesc;
     }
 
     ///AdPreviewFragment viewpager set position after screen rotate
-    public Integer getViewPagerPosition(){
+    public Integer getViewPagerPosition() {
         if (viewPagerPosition == null) {
             viewPagerPosition = 0;
         }
         return viewPagerPosition;
     }
-    public void setViewPagerPosition(int viewPagerPosition){
+
+    public void setViewPagerPosition(int viewPagerPosition) {
         this.viewPagerPosition = viewPagerPosition;
     }
 

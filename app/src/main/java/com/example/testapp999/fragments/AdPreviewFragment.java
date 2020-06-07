@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -42,7 +44,7 @@ import java.util.List;
 public class AdPreviewFragment extends Fragment implements OnMapMdReadyCallback {
     private static final String TAG = "AdPreviewFragment";
     private static final String ID_ICON_APARTMENT = "apartment";
-    private static int FIRST_RUN = 0;
+    //    private static int FIRST_RUN = 0;
     private int observerCall = 0;
     private Ads ads;
     private AdsViewModel adsViewModel;
@@ -96,10 +98,15 @@ public class AdPreviewFragment extends Fragment implements OnMapMdReadyCallback 
         title.setText(ads.getTitle());
         price.setText(String.valueOf(ads.getPrice()) + ads.getCurrency());
 
+
         adsViewModel.getListAd().observe(getViewLifecycleOwner(), (AdObject adObject) -> {
-            FIRST_RUN++;
-            observerCall++;
-            if (FIRST_RUN == 1 || observerCall > 1) {
+//            FIRST_RUN++;
+//            observerCall++;
+//            if (FIRST_RUN == 1 || observerCall > 1) {
+            Lifecycle.State status = getViewLifecycleOwner().getLifecycle().getCurrentState();
+
+            if (status.isAtLeast(Lifecycle.State.RESUMED) ) {
+
                 List<String> photoList = new ArrayList<>();
 
                 for (AdObject.ObjPhoto photo : adObject.getAd().getExtended_images()) {
@@ -111,17 +118,22 @@ public class AdPreviewFragment extends Fragment implements OnMapMdReadyCallback 
                 adRecyclerAdapter = new AdRecyclerAdapter(photoList);
                 adViewPager.setAdapter(adRecyclerAdapter);
 
-                Log.d(TAG, "onViewCreated: " + observerCall);
-                if (observerCall == 1 || observerCall % 2 == 0) {
+//                Log.d(TAG, "onViewCreated: " + observerCall);
+                //               if (observerCall == 1 || observerCall % 2 == 0) {
+
+                if (observerCall == 0) {
                     setupOnboardingIndicators();
+                    observerCall++;
                 }
-                if (observerCall < 3) {
-                    setCurrentOnboardIndicator(0);
-                }
+//                }
+                //               if (observerCall < 3) {
+                setCurrentOnboardIndicator(0);
+                //               }
 
                 adViewPager.setCurrentItem(adsViewModel.getViewPagerPosition() - 1, false);
 
                 mapView.initMap(requireContext(), this);
+                //           }
             }
         });
 
@@ -188,6 +200,7 @@ public class AdPreviewFragment extends Fragment implements OnMapMdReadyCallback 
     public void onDestroyView() {
         super.onDestroyView();
         adsViewModel.setViewPagerPosition(adViewPager.getCurrentItem() + 1);
+        observerCall = 0;
     }
 
     @Override
