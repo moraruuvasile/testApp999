@@ -45,7 +45,7 @@ public class AdPreviewFragment extends Fragment implements OnMapMdReadyCallback 
     private static final String TAG = "AdPreviewFragment";
     private static final String ID_ICON_APARTMENT = "apartment";
     //    private static int FIRST_RUN = 0;
-    private int observerCall = 0;
+//    private int observerCall = 0;
     private Ads ads;
     private AdsViewModel adsViewModel;
     private AdRecyclerAdapter adRecyclerAdapter;
@@ -121,10 +121,10 @@ public class AdPreviewFragment extends Fragment implements OnMapMdReadyCallback 
 //                Log.d(TAG, "onViewCreated: " + observerCall);
                 //               if (observerCall == 1 || observerCall % 2 == 0) {
 
-                if (observerCall == 0) {
+ //               if (observerCall == 0) {
                     setupOnboardingIndicators();
-                    observerCall++;
-                }
+ //                   observerCall++;
+ //               }
 //                }
                 //               if (observerCall < 3) {
                 setCurrentOnboardIndicator(0);
@@ -200,7 +200,7 @@ public class AdPreviewFragment extends Fragment implements OnMapMdReadyCallback 
     public void onDestroyView() {
         super.onDestroyView();
         adsViewModel.setViewPagerPosition(adViewPager.getCurrentItem() + 1);
-        observerCall = 0;
+//        observerCall = 0;
     }
 
     @Override
